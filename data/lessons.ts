@@ -1,0 +1,51 @@
+export const lessons = [
+  {
+    id: '0',
+    title: 'Основи бачати: базові кроки',
+    videoUrl: 'https://youtu.be/ZnYwxKqFO5s',
+    description: 'Розберемо головні кроки бачати, ритміку та техніку.',
+    level: 'beginner',
+  },
+  {
+    id: '1',
+    title: 'Робота рук: комбінації і пластика',
+    videoUrl: 'https://youtu.be/-qKUn8oCTaY',
+    description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
+    level: 'intermediate',
+  },
+  {
+    id: '2',
+    title: 'Робота рук: комбінації і пластика',
+    videoUrl: 'https://youtu.be/KVfwuYNG2no',
+    description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
+    level: 'intermediate',
+  },
+  {
+    id: '3',
+    title: 'Робота рук: комбінації і пластика',
+    videoUrl: 'https://youtu.be/FHrrpCBiCJA',
+    description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
+    level: 'intermediate',
+  },
+  {
+    id: '4',
+    title: 'Робота рук: комбінації і пластика',
+    videoUrl: 'https://youtu.be/PRlDNToON8E',
+    description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
+    level: 'intermediate',
+  },
+  {
+    id: '5',
+    title: 'Робота рук: комбінації і пластика',
+    videoUrl: 'https://youtu.be/pZt1jiFjq0k',
+    description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
+    level: 'intermediate',
+  },
+  {
+    id: '6',
+    title: 'Робота рук: комбінації і пластика',
+    videoUrl: 'https://youtu.be/shBts66nq6M',
+    description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
+    level: 'intermediate',
+  },
+]

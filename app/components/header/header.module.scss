@@ -1,0 +1,74 @@
+.header {
+  background: #512f9f;
+  padding: 10px 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  span {
+    font-weight: 500;
+    color: #fff;
+  }
+
+  button {
+    border: none;
+    background: #3f81d1;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #e68a1a;
+    }
+  }
+}
+
+.study_btn {
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+
+  a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #e68a1a;
+    }
+  }
+}
+.logo {
+  height: 50px;
+}
+
+.signout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  p {
+    color: #fff;
+  }
+}
+
+.auth {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}

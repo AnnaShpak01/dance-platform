@@ -1,103 +1,180 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { signIn, useSession } from 'next-auth/react'
+import styles from './page.module.scss'
+import Link from 'next/link'
+import Image from 'next/image'
+export default function HomePage() {
+  const { data: session } = useSession()
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main>
+      <div className={styles.poster}>
+        <div className="container">
+          <div className={styles.text_block}>
+            <h1 className="">Bachata Constructor </h1>
+            <p className="">
+              Онлайн-курс з бачати, який допоможе покращити ваші навички танцю у захопливій ігровій
+              формі. Створюйте нові комбінації та розширюйте свій танцювальний словниковий запас,
+              граючись і отримуючи задоволення від процесу!{' '}
+            </p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {!session ? (
+              <button onClick={() => signIn('google')} className={styles.study_btn}>
+                Увійти, щоб розпочати навчання
+              </button>
+            ) : (
+              <>
+                <Link href="/lessons" className={styles.study_link}>
+                  Перейти до навчання
+                </Link>
+              </>
+            )}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </div>
+      <div className={styles.blocks_bg}>
+        <div className="container">
+          <div className={styles.blocks}>
+            <div className={styles.block_ach}>
+              <div className={styles.digital}>3</div>
+              <div className={styles.label}>тижні марафону</div>
+            </div>
+            <div className={styles.block_ach}>
+              <div className={styles.digital}>7</div>
+              <div className={styles.label}>відеоуроків</div>
+            </div>
+            <div className={styles.block_ach}>
+              <div className={styles.digital}>30</div>
+              <div className={styles.label}> кроків</div>
+            </div>
+            <div className={styles.block_ach}>
+              <div className={styles.digital}>40</div>
+              <div className={styles.label}>комбінацій рук</div>
+            </div>
+            <div className={styles.block_ach}>
+              <div className={styles.digital}>3</div>
+              <div className={styles.label}>рівні складності</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.info}>
+        <div className="container">
+          <div className={styles.info_block}>
+            <div className={styles.image}>
+              <Image
+                src="/images/dancer.png"
+                alt="Bachata Dancer"
+                width="832"
+                height="1248"
+                priority
+              />
+            </div>
+            <div className={styles.text_part}>
+              <h2>Bachata Constructor: створи свою унікальну бачату!</h2>
+              <p>
+                Ви коли-небудь мріяли не просто повторювати рухи з відео, а танцювати бачату у
+                своєму власному стилі — жіночно, впевнено й легко імпровізуючи під музику? Уявіть:
+                ви на паркеті, музика пульсує в крові, а ваші рухи — це чиста імпровізація, де кожен
+                крок і кожен помах руки оживають у вашій власній історії. Ви не просто повторюєте за
+                викладачем, а створюєте свою бачату — чуттєву, грайливу, незабутню. Якщо ви мрієте
+                про свободу в танці, де жіночий стиль бачати стає вашим особистим полотном для
+                творчості, Bachata Constructor — це ваш ключ до магії!
+              </p>
+              <h2>Чому цей курс — ваша танцювальна революція?</h2>
+              <p>
+                <b>Курс має модульний підхід:</b> Розберемо 30 базових кроків і 40 комбінацій рук
+                (плюс бонусні опції для натхнення). Кожен елемент — як цеглинка Lego: ви вчитеся
+                комбінувати їх у нескінченні варіації, експериментуючи самостійно.
+              </p>
+              <p>
+                <b>Імпровізація на максимум:</b> Курс не про &quot;запам&apos;ятай і повтори&quot;,
+                а про &quot;спробуй, змішай, експерементуй&quot;. Ви навчитеся з&apos;єднувати кроки
+                з руками в унікальні послідовності, створювати власні хореографії та імпровізувати
+                на будь-якій вечірці — без страху і з повною впевненістю!
+              </p>
+              <p>
+                <b>Передбачено три рівні складності.</b> Саме тому курс підійде усім бажаючим - від
+                Beginner до Advance. Чим вище рівень, тим складніші домашні завдання. Для Advance
+                рівня є додаткові ускладнення. А якщо ви раніше ніколи не танцювали бачату, для вас
+                є спеціальний нульовий урок, де пояснюється техніка базового кроку, ручок та
+                повороту.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.schedule}>
+        <div className="container">
+          <div className={styles.partes}>
+            <div className={styles.text_part}>
+              <h2>Структура курсу</h2>
+              <div className={styles.blocks}>
+                <div className={styles.block}>
+                  <p>Якщо ви початківець - пройдіть нульовий урок перед стартом курсу</p>
+                </div>
+                <div className={styles.block}>
+                  <p>
+                    Перші два тижні курсу вас чекає 6 уроків по 20 хвилин. Уроки будуть відкриватися
+                    по понеділках, середах і п&apos;ятницях. Ви зможете переглянути їх у зручний для
+                    вас час. В кожному уроці ми будемо розбирати по 5 кроків та 6-7 комбінацій рук.
+                    Також для Advance (високого) рівня буде додаткове ускладення, яке можна
+                    накладати на кроки.
+                  </p>
+                </div>
+                <div className={styles.block}>
+                  <p>
+                    До кожного уроку, окрім пропрацювання матеріалу, у вас буде домашнє завдання
+                    (інколи два) - записати невеличке відео (30-60 секунд). Це будуть творчі
+                    завдання на основі пройденого матеріалу, на виконання ДЗ до кожного уроку
+                    дається 3 дні.
+                  </p>
+                </div>
+                <div className={styles.block}>
+                  <p>
+                    На третьому тижні ви розбираєте запропоновану мною хореографію (всього є 3
+                    хореографії по одній на кожен рівень, але розібрати і вивчити ви можете усі три)
+                    та здаєте в якості домашнього завдання.
+                  </p>
+                </div>
+                <div className={styles.block}>
+                  <p>
+                    Також на третьому тижні ви здаєте заключну курсову роботу - вашу власну
+                    хореографію.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className={styles.image}>
+              <Image
+                src="/images/way.jpeg"
+                alt="Bachata Dancer"
+                width="345"
+                height="520"
+                priority
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.benefits}>
+        <p>
+          Бонуси, які надихають на перемогу Знижка для дисциплінованих: Здайте всі домашні роботи
+          вчасно — і отримайте ексклюзивну знижку на мій майбутній &quot;Bachata Advent Calendar
+          2026&quot; (щоденні танцювальні сюрпризи на весь рік!). Конкурс талантів: Авторка
+          найцікавішої хореографії виграє безкоштовний доступ до календаря. Ваш твір може стати
+          зіркою — і вашим пропуском у світ професійного танцю! ⚡ Унікальна фішка: Генератор
+          Комбінацій на сайті А тепер — справжня родзинка! На спеціальній сторінці курсу ви знайдете
+          інтерактивний генератор: натисніть кнопку — і алгоритм рандомно згенерує ідеальне
+          поєднання кроків і рук. Це як особистий &quot;танцювальний ШІ&quot; — для нескінченних
+          ідей, коли натхнення на паузі. Експериментуйте, знімайте відео і діліться в чаті групи —
+          разом ми створимо спільноту креативних бачагерок! Готові перетворити бачачу з рутини на
+          вашу суперсилу? Не відкладайте мрію — місця обмежені, а перша партія уроків стартує вже
+          скоро. Купіть курс зараз і почніть творити свою історію в ритмі бачати. Ваш перший крок до
+          свободи — всього в один клік! 💃✨
+        </p>
+      </div>
+    </main>
+  )
 }
