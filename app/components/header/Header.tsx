@@ -43,7 +43,7 @@ export default function Header() {
           <nav className={styles.nav}>
             <Link href="/lessons">Уроки</Link>
             <Link href="/randomizer">Генератор комбінацій</Link>
-            <Link href="/teacher">Про проект</Link>
+            <Link href="/choreo">Хореографія</Link>
           </nav>
           <div className={styles.signout}>
             <p>Привіт, {session.user?.name}!</p>

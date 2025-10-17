@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
-const allowedEmails = ['anna.shpak.fe@gmail.com', 'starlingelistana@gmail.com', 'elistana@i.ua']
+const allowedEmails = ['starlingelistana@gmail.com']
 
 const handler = NextAuth({
   providers: [
@@ -12,8 +12,23 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user }) {
-      if (allowedEmails.includes(user.email!)) return true
+      // Проверка на user.email (хотя Google всегда даёт email)
+      if (user?.email && allowedEmails.includes(user.email)) return true
       return '/not-authorized'
+    },
+    // JWT callback: сохраняем email только если user есть
+    async jwt({ token, user }) {
+      if (user?.email) {
+        token.email = user.email
+      }
+      return token
+    },
+    // Session callback: присваиваем только если token.email и session.user есть
+    async session({ session, token }) {
+      if (token?.email && session.user) {
+        session.user.email = token.email as string
+      }
+      return session
     },
   },
 })
