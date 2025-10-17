@@ -1,5 +1,6 @@
 .lessonBg {
   background-color: rgb(236, 223, 188);
+  min-height: 100vh;
 }
 
 .wrapper {
@@ -41,4 +42,25 @@
   padding: 80px;
   font-size: 1.5rem;
   color: #999;
+}
+
+/* 🔒 Добавляем оформление для недоступных уроков */
+.locked {
+  text-align: center;
+  background: #fff6e0;
+  padding: 60px 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  color: #444;
+
+  p {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: 1.1rem;
+    color: #777;
+  }
 }

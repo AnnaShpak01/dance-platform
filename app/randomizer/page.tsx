@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import steps from '@/data/steps'
 import hands from '@/data/hands'
+import { lessonSchedule } from '@/data/lessonschedule'
 import VideoPlayer from '@/app/components/videoplayer/VideoPlayer'
 import styles from './randomizer.module.scss'
 
@@ -12,9 +13,24 @@ export default function Randomizer() {
     hand: { id: string; title: string; videoUrl: string; lesson: number }
   } | null>(null)
 
+  // --- Получаем список открытых уроков по дате
+  const now = new Date()
+  const availableLessons = lessonSchedule
+    .filter((l) => new Date(l.openDate) <= now)
+    .map((l) => l.id)
+
+  // --- Фильтруем шаги и руки по доступным урокам
+  const availableSteps = steps.filter((s) => availableLessons.includes(s.lesson))
+  const availableHands = hands.filter((h) => availableLessons.includes(h.lesson))
+
   const generate = () => {
-    const step = steps[Math.floor(Math.random() * steps.length)]
-    const hand = hands[Math.floor(Math.random() * hands.length)]
+    if (!availableSteps.length || !availableHands.length) {
+      alert('Поки що жоден урок не відкрито 😅')
+      return
+    }
+
+    const step = availableSteps[Math.floor(Math.random() * availableSteps.length)]
+    const hand = availableHands[Math.floor(Math.random() * availableHands.length)]
     setCombo({ step, hand })
   }
 

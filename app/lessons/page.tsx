@@ -1,23 +1,77 @@
+'use client'
+
 import Link from 'next/link'
 import { lessons } from '@/data/lessons'
-import styles from './lessonlslist.module.scss'
+import { lessonSchedule } from '@/data/lessonschedule'
+import styles from './lessonsList.module.scss'
+import Image from 'next/image'
 
 export default function LessonsPage() {
+  const now = new Date()
+
   return (
-    <div className={styles.lessonslist}>
+    <main className={styles.wrapper}>
       <div className="container">
-        <h1 className="">Уроки курсу</h1>
-        <ul className="">
-          {lessons.map((lesson) => (
-            <li key={lesson.id} className="">
-              <Link href={`/lessons/${lesson.id}`}>
-                <h2 className="">{lesson.title}</h2>
-                <p className="">{lesson.description}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <h1 className={styles.title}>Уроки курсу</h1>
+
+        <div className={styles.grid}>
+          {lessons.map((lesson) => {
+            const scheduleItem = lessonSchedule.find((item) => item.id === Number(lesson.id))
+            const openDate = scheduleItem ? new Date(scheduleItem.openDate) : new Date(0)
+            const isAvailable = openDate <= now
+
+            return (
+              <div
+                key={lesson.id}
+                className={`${styles.lessonCard} ${!isAvailable ? styles.locked : ''}`}>
+                {isAvailable ? (
+                  <Link href={`/lessons/${lesson.id}`} className={styles.cardLink}>
+                    <div className={styles.imageWrapper}>
+                      <Image
+                        src="/images/bg_web.png"
+                        alt="lesson"
+                        width="100"
+                        height="100"
+                        priority
+                        className={styles.image}
+                      />
+                    </div>
+                    <div className={styles.info}>
+                      <h3>Урок {lesson.id}</h3>
+                    </div>
+                  </Link>
+                ) : (
+                  <div className={styles.lockedContent}>
+                    <div className={styles.imageWrapper}>
+                      <Image
+                        src="/images/bg_web.png"
+                        alt="lesson"
+                        width="100"
+                        height="100"
+                        priority
+                        className={styles.image}
+                      />
+                      <div className={styles.overlay}>
+                        <span className={styles.lockIcon}>🔒</span>
+                      </div>
+                    </div>
+                    <div className={styles.info}>
+                      <h3>Урок {lesson.id}</h3>
+                      <span>
+                        Відкриється{' '}
+                        {openDate.toLocaleDateString('uk-UA', {
+                          day: 'numeric',
+                          month: 'long',
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
