@@ -1,19 +1,15 @@
 .videoContainer {
   position: relative;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  overflow: hidden;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 
   iframe {
-    border: none;
     width: 100%;
     height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+    border: none;
   }
 }
 
@@ -23,5 +19,34 @@
 
 .vertical {
   aspect-ratio: 9 / 16;
-  max-height: 90vh;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* --- Кнопка управления звуком --- */
+.muteButton {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  &.unmuted {
+    background: rgba(255, 255, 255, 0.25);
+    color: #000;
+  }
 }

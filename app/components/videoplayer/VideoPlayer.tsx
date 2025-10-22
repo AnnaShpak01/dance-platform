@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './videoplayer.module.scss'
 
 interface VideoPlayerProps {
@@ -10,25 +10,33 @@ interface VideoPlayerProps {
 }
 
 export default function VideoPlayer({ url, title, className }: VideoPlayerProps) {
-  const getEmbedUrl = (url: string): string => {
-    let videoId = ''
+  const [muted, setMuted] = useState(true)
 
-    if (url.includes('watch?v=')) {
-      videoId = url.split('v=')[1]?.split('&')[0]
-    } else if (url.includes('youtu.be/')) {
-      videoId = url.split('youtu.be/')[1]?.split('?')[0]
-    } else if (url.includes('shorts/')) {
-      videoId = url.split('shorts/')[1]?.split('?')[0]
-    } else if (url.includes('embed/')) {
-      return `${url}?rel=0&modestbranding=1&controls=1&playsinline=1`
-    }
-
-    return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&controls=1&playsinline=1`
+  const getVideoId = (url: string): string => {
+    if (url.includes('watch?v=')) return url.split('v=')[1]?.split('&')[0] || ''
+    if (url.includes('youtu.be/')) return url.split('youtu.be/')[1]?.split('?')[0] || ''
+    if (url.includes('shorts/')) return url.split('shorts/')[1]?.split('?')[0] || ''
+    if (url.includes('embed/')) return url.split('embed/')[1]?.split('?')[0] || ''
+    return ''
   }
 
-  const embedUrl = getEmbedUrl(url)
-
+  const videoId = getVideoId(url)
   const isVertical = url.includes('shorts/')
+
+  // Базовые параметры
+  const baseParams = `rel=0&modestbranding=1&playsinline=1&enablejsapi=1`
+
+  // Для Shorts добавляем автоплей и цикл
+  const embedUrl = isVertical
+    ? `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&${baseParams}&mute=${
+        muted ? 1 : 0
+      }&controls=0`
+    : `https://www.youtube.com/embed/${videoId}?${baseParams}&controls=1`
+
+  const toggleMute = () => {
+    if (!isVertical) return
+    setMuted((prev) => !prev)
+  }
 
   return (
     <div
@@ -36,11 +44,20 @@ export default function VideoPlayer({ url, title, className }: VideoPlayerProps)
         className || ''
       }`}>
       <iframe
+        key={`${videoId}-${muted}`} // обновляем iframe при изменении mute
         src={embedUrl}
         title={title || 'YouTube Video'}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="autoplay; encrypted-media; clipboard-write; accelerometer; gyroscope; picture-in-picture; web-share"
         allowFullScreen
       />
+      {isVertical && (
+        <button
+          className={`${styles.muteButton} ${!muted ? styles.unmuted : ''}`}
+          onClick={toggleMute}
+          aria-label={muted ? 'Включить звук' : 'Выключить звук'}>
+          {muted ? '🔇' : '🔊'}
+        </button>
+      )}
     </div>
   )
 }
