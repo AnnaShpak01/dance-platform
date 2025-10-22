@@ -1,10 +1,11 @@
 export const lessons = [
   {
     id: '0',
-    title: 'Основи бачати: базові кроки',
+    title: 'Основи бачати: базовий та короткий крок, звичайний поворот',
     videoUrl: 'https://youtu.be/ZnYwxKqFO5s',
     description: 'Розберемо головні кроки бачати, ритміку та техніку.',
     level: 'beginner',
+    cover: '/images/covers/0.png',
   },
   {
     id: '1',
@@ -12,6 +13,7 @@ export const lessons = [
     videoUrl: 'https://youtu.be/-qKUn8oCTaY',
     description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
     level: 'intermediate',
+    cover: '/images/covers/1.png',
   },
   {
     id: '2',
@@ -19,6 +21,7 @@ export const lessons = [
     videoUrl: 'https://youtu.be/KVfwuYNG2no',
     description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
     level: 'intermediate',
+    cover: '/images/covers/2.png',
   },
   {
     id: '3',
@@ -26,6 +29,7 @@ export const lessons = [
     videoUrl: 'https://youtu.be/FHrrpCBiCJA',
     description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
     level: 'intermediate',
+    cover: '/images/covers/3.png',
   },
   {
     id: '4',
@@ -33,6 +37,7 @@ export const lessons = [
     videoUrl: 'https://youtu.be/PRlDNToON8E',
     description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
     level: 'intermediate',
+    cover: '/images/covers/4.png',
   },
   {
     id: '5',
@@ -40,6 +45,7 @@ export const lessons = [
     videoUrl: 'https://youtu.be/pZt1jiFjq0k',
     description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
     level: 'intermediate',
+    cover: '/images/covers/5.png',
   },
   {
     id: '6',
@@ -47,5 +53,6 @@ export const lessons = [
     videoUrl: 'https://youtu.be/shBts66nq6M',
     description: 'Навчимося поєднувати рухи рук і корпусу для більш виразного стилю.',
     level: 'intermediate',
+    cover: '/images/covers/6.png',
   },
 ]

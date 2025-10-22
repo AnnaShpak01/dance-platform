@@ -11,6 +11,6 @@ export const lessonSchedule = [
   { id: 2, title: 'Урок 2', openDate: '2025-10-05' }, // п’ятниця
   { id: 3, title: 'Урок 3', openDate: '2025-10-07' }, // понеділок
   { id: 4, title: 'Урок 4', openDate: '2025-10-10' }, // середа
-  { id: 5, title: 'Урок 5', openDate: '2025-11-12' }, // п’ятниця
-  { id: 6, title: 'Урок 6', openDate: '2025-11-14' },
+  { id: 5, title: 'Урок 5', openDate: '2025-10-12' }, // п’ятниця
+  { id: 6, title: 'Урок 6', openDate: '2025-10-19' },
 ]

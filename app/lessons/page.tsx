@@ -28,10 +28,10 @@ export default function LessonsPage() {
                   <Link href={`/lessons/${lesson.id}`} className={styles.cardLink}>
                     <div className={styles.imageWrapper}>
                       <Image
-                        src="/images/bg_web.png"
+                        src={lesson.cover}
                         alt="lesson"
-                        width="100"
-                        height="100"
+                        width="414"
+                        height="232"
                         priority
                         className={styles.image}
                       />
@@ -44,10 +44,10 @@ export default function LessonsPage() {
                   <div className={styles.lockedContent}>
                     <div className={styles.imageWrapper}>
                       <Image
-                        src="/images/bg_web.png"
+                        src={lesson.cover}
                         alt="lesson"
-                        width="100"
-                        height="100"
+                        width="414"
+                        height="232"
                         priority
                         className={styles.image}
                       />
