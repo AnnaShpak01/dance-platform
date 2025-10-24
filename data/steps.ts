@@ -79,7 +79,7 @@ const steps = [
   {
     id: '9',
     title: 'Крос на 2',
-    videoUrl: 'https://youtube.com/shorts/HndsG3L6V_I',
+    videoUrl: 'https://youtube.com/shorts/bN-VNhSIFu8',
     lesson: 2,
     category: 'normal',
   },
@@ -144,7 +144,7 @@ const steps = [
     title: 'Виштовхування',
     videoUrl: 'https://youtube.com/shorts/YHxUGvhKiEc',
     lesson: 4,
-    category: 'counterpropulsion',
+    category: 'normal',
   },
   {
     id: '19',
@@ -190,7 +190,7 @@ const steps = [
   },
   {
     id: '25',
-    title: 'коло через низ з виходом в бічну хвилю',
+    title: 'Коло через низ з виходом в бічну хвилю',
     videoUrl: 'https://youtube.com/shorts/sdDkI5Fe3ZQ',
     lesson: 5,
     category: 'wave',

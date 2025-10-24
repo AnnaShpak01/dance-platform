@@ -32,36 +32,106 @@ export default function Randomizer() {
       return
     }
 
-    setIsRolling(true)
-    setCombo(null)
+    const randomStep = () => availableSteps[Math.floor(Math.random() * availableSteps.length)]
+    const randomHand = () => availableHands[Math.floor(Math.random() * availableHands.length)]
+    const randomComp = () =>
+      availableComplications[Math.floor(Math.random() * availableComplications.length)]
 
-    setTimeout(() => {
-      const randomStep = () => availableSteps[Math.floor(Math.random() * availableSteps.length)]
-      const randomHand = () => availableHands[Math.floor(Math.random() * availableHands.length)]
-      const randomComp = () =>
-        availableComplications[Math.floor(Math.random() * availableComplications.length)]
+    // --- Новый результат ---
+    let result: any = {}
 
-      let result: any = {}
+    // === BEGINNER ===
+    if (level === 'beginner') {
+      result = { steps: [randomStep()], hands: [randomHand()] }
+    }
 
-      if (level === 'beginner') {
-        result = { steps: [randomStep()], hands: [randomHand()] }
+    // === INTERMEDIATE ===
+    if (level === 'intermediate') {
+      let firstStep = randomStep()
+      let secondStep = randomStep()
+
+      // Убеждаемся, что шаги разные
+      while (secondStep.id === firstStep.id) {
+        secondStep = randomStep()
       }
 
-      if (level === 'intermediate') {
-        result = { steps: [randomStep(), randomStep()], hands: [randomHand()] }
+      // Проверка counterpropulsion / wave логики
+      const isCounter1 = firstStep.category === 'counterpropulsion'
+      const isCounter2 = secondStep.category === 'counterpropulsion'
+
+      if (isCounter1 || isCounter2) {
+        const validSteps = availableSteps.filter(
+          (s) => s.category === 'counterpropulsion' || s.category === 'wave'
+        )
+        if (!isCounter1) firstStep = validSteps[Math.floor(Math.random() * validSteps.length)]
+        if (!isCounter2) secondStep = validSteps[Math.floor(Math.random() * validSteps.length)]
       }
 
-      if (level === 'advanced') {
-        result = {
-          steps: [randomStep(), randomStep()],
-          hands: twoHands ? [randomHand(), randomHand()] : [randomHand()],
-          comp: includeComplication && availableComplications.length ? randomComp() : null,
+      result = { steps: [firstStep, secondStep], hands: [randomHand()] }
+    }
+
+    // === ADVANCED ===
+    if (level === 'advanced') {
+      let comp = null
+      let firstStep, secondStep
+
+      if (includeComplication && availableComplications.length) {
+        // === 1. Сначала выбираем усложнение ===
+        comp = randomComp()
+
+        // === 2. Мапа совместимости ===
+        const compatibilityMap: Record<string, string[]> = {
+          '1': ['00', '1', '2', '3', '4', '5', '8', '9', '10', '15'],
+          '2': ['00', '1', '2', '3', '9'],
+          '3': ['00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '20'],
+          '4': ['00', '1', '3', '4', '5', '6', '7', '20'],
+          '5': ['00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '13', '20'],
+          '6': ['00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '13', '20'],
+          '7': ['00', '1', '2', '3', '5'],
+          '8': ['00', '01', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+          '9': ['02', '26', '27', '28', '29'],
+        }
+
+        const compId = String(comp.id)
+        const allowedSteps = availableSteps.filter((s) => compatibilityMap[compId]?.includes(s.id))
+
+        // === 3. Первый шаг — совместимый ===
+        firstStep = allowedSteps[Math.floor(Math.random() * allowedSteps.length)]
+
+        // === 4. Второй шаг — не counterpropulsion и не совпадает с первым ===
+        const validSecond = availableSteps.filter(
+          (s) => s.id !== firstStep.id && s.category !== 'counterpropulsion'
+        )
+        secondStep = validSecond[Math.floor(Math.random() * validSecond.length)]
+      } else {
+        // === Без усложнения — обычная логика ===
+        firstStep = randomStep()
+        secondStep = randomStep()
+
+        while (secondStep.id === firstStep.id) {
+          secondStep = randomStep()
+        }
+
+        const isCounter1 = firstStep.category === 'counterpropulsion'
+        const isCounter2 = secondStep.category === 'counterpropulsion'
+
+        if (isCounter1 || isCounter2) {
+          const validSteps = availableSteps.filter(
+            (s) => s.category === 'counterpropulsion' || s.category === 'wave'
+          )
+          if (!isCounter1) firstStep = validSteps[Math.floor(Math.random() * validSteps.length)]
+          if (!isCounter2) secondStep = validSteps[Math.floor(Math.random() * validSteps.length)]
         }
       }
 
-      setCombo(result)
-      setIsRolling(false)
-    }, 1500)
+      // === 5. Руки ===
+      const hands = [randomHand()]
+      if (twoHands) hands.push(randomHand())
+
+      result = { steps: [firstStep, secondStep], hands, comp }
+    }
+
+    setCombo(result)
   }
 
   return (
