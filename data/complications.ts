@@ -1,4 +1,4 @@
-const complication = [
+const complications = [
   {
     id: '1',
     title: 'Через низ в сторони, проворот від ліктя, наверх, долоні разом, за голову і по собі',
@@ -55,4 +55,4 @@ const complication = [
   },
 ]
 
-export default complication
+export default complications
