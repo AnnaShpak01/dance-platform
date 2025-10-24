@@ -1,19 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import steps from '@/data/steps'
-import hands from '@/data/hands'
-import complication from '@/data/complications'
+import { Step, Hand, Complication, ComboResult, Level } from '@/types/types'
 import { lessonSchedule } from '@/data/lessonschedule'
+import stepsData from '@/data/steps'
+import handsData from '@/data/hands'
+import complicationsData from '@/data/complications'
+import { generateCombo } from '@/logic/generateCombo'
 import VideoPlayer from '@/app/components/videoplayer/VideoPlayer'
 import styles from './randomizer.module.scss'
 
-type Level = 'beginner' | 'intermediate' | 'advanced'
-
 export default function Randomizer() {
-  const [combo, setCombo] = useState<any>(null)
+  const [combo, setCombo] = useState<ComboResult | null>(null)
   const [level, setLevel] = useState<Level>('beginner')
-  const [includeComplication, setIncludeComplication] = useState(true)
+  const [includeComplication, setIncludeComplication] = useState(false)
   const [twoHands, setTwoHands] = useState(false)
   const [isRolling, setIsRolling] = useState(false)
 
@@ -22,187 +22,37 @@ export default function Randomizer() {
     .filter((l) => new Date(l.openDate) <= now)
     .map((l) => l.id)
 
-  const availableSteps = steps.filter((s) => availableLessons.includes(s.lesson))
-  const availableHands = hands.filter((h) => availableLessons.includes(h.lesson))
-  const availableComplications = complication.filter((c) => availableLessons.includes(c.lesson))
+  const availableSteps = stepsData.filter((s) => availableLessons.includes(s.lesson))
+  const availableHands = handsData.filter((h) => availableLessons.includes(h.lesson))
+  const availableComplications = complicationsData.filter((c) =>
+    availableLessons.includes(c.lesson)
+  )
 
-  const generate = () => {
+  const handleGenerate = () => {
     if (!availableSteps.length || !availableHands.length) {
       alert('Поки що жоден урок не відкрито 😅')
       return
     }
 
-    const randomStep = () => availableSteps[Math.floor(Math.random() * availableSteps.length)]
-    const randomHand = (allowedHands: any[]) =>
-      allowedHands[Math.floor(Math.random() * allowedHands.length)]
-    const randomComp = () =>
-      availableComplications[Math.floor(Math.random() * availableComplications.length)]
-
-    // --- Новый результат ---
-    let result: any = {}
-
-    // === BEGINNER ===
-    if (level === 'beginner') {
-      const step = randomStep()
-
-      // 💡 Проверяем совместимость рук
-      const invalidStepIds = [
-        '02',
-        '16',
-        '17',
-        '18',
-        '19',
-        '21',
-        '22',
-        '23',
-        '24',
-        '25',
-        '26',
-        '27',
-        '28',
-        '29',
-      ]
-      const allowedHands = invalidStepIds.includes(step.id)
-        ? availableHands.filter((h) => !['01', '02'].includes(h.id))
-        : availableHands
-
-      const hand = randomHand(allowedHands)
-      result = { steps: [step], hands: [hand] }
-    }
-
-    // === INTERMEDIATE ===
-    if (level === 'intermediate') {
-      let firstStep = randomStep()
-      let secondStep = randomStep()
-
-      // Убеждаемся, что шаги разные
-      while (secondStep.id === firstStep.id) {
-        secondStep = randomStep()
-      }
-
-      // Проверка counterpropulsion / wave логики
-      const isCounter1 = firstStep.category === 'counterpropulsion'
-      const isCounter2 = secondStep.category === 'counterpropulsion'
-
-      if (isCounter1 || isCounter2) {
-        const validSteps = availableSteps.filter(
-          (s) => s.category === 'counterpropulsion' || s.category === 'wave'
-        )
-        if (!isCounter1) firstStep = validSteps[Math.floor(Math.random() * validSteps.length)]
-        if (!isCounter2) secondStep = validSteps[Math.floor(Math.random() * validSteps.length)]
-      }
-
-      // 💡 Проверяем шаги на несовместимость с руками
-      const invalidStepIds = [
-        '02',
-        '16',
-        '17',
-        '18',
-        '19',
-        '21',
-        '22',
-        '23',
-        '24',
-        '25',
-        '26',
-        '27',
-        '28',
-        '29',
-      ]
-      const hasInvalidStep =
-        invalidStepIds.includes(firstStep.id) || invalidStepIds.includes(secondStep.id)
-      const allowedHands = hasInvalidStep
-        ? availableHands.filter((h) => !['01', '02'].includes(h.id))
-        : availableHands
-
-      result = { steps: [firstStep, secondStep], hands: [randomHand(allowedHands)] }
-    }
-
-    // === ADVANCED ===
-    if (level === 'advanced') {
-      let comp = null
-      let firstStep, secondStep
-
-      if (includeComplication && availableComplications.length) {
-        // === 1. Сначала выбираем усложнение ===
-        comp = randomComp()
-
-        // === 2. Мапа совместимости ===
-        const compatibilityMap: Record<string, string[]> = {
-          '1': ['00', '1', '2', '3', '4', '5', '8', '9', '10', '15'],
-          '2': ['00', '1', '2', '3', '9'],
-          '3': ['00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '20'],
-          '4': ['00', '1', '3', '4', '5', '6', '7', '20'],
-          '5': ['00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '13', '20'],
-          '6': ['00', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '13', '20'],
-          '7': ['00', '1', '2', '3', '5'],
-          '8': ['00', '01', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-          '9': ['02', '26', '27', '28', '29'],
-        }
-
-        const compId = String(comp.id)
-        const allowedSteps = availableSteps.filter((s) => compatibilityMap[compId]?.includes(s.id))
-
-        // === 3. Первый шаг — совместимый ===
-        firstStep = allowedSteps[Math.floor(Math.random() * allowedSteps.length)]
-
-        // === 4. Второй шаг — не counterpropulsion и не совпадает с первым ===
-        const validSecond = availableSteps.filter(
-          (s) => s.id !== firstStep.id && s.category !== 'counterpropulsion'
-        )
-        secondStep = validSecond[Math.floor(Math.random() * validSecond.length)]
-      } else {
-        // === Без усложнения — обычная логика ===
-        firstStep = randomStep()
-        secondStep = randomStep()
-
-        while (secondStep.id === firstStep.id) {
-          secondStep = randomStep()
-        }
-
-        const isCounter1 = firstStep.category === 'counterpropulsion'
-        const isCounter2 = secondStep.category === 'counterpropulsion'
-
-        if (isCounter1 || isCounter2) {
-          const validSteps = availableSteps.filter(
-            (s) => s.category === 'counterpropulsion' || s.category === 'wave'
-          )
-          if (!isCounter1) firstStep = validSteps[Math.floor(Math.random() * validSteps.length)]
-          if (!isCounter2) secondStep = validSteps[Math.floor(Math.random() * validSteps.length)]
-        }
-      }
-
-      // 💡 5. Проверяем шаги перед выбором рук
-      const invalidStepIds = [
-        '02',
-        '16',
-        '17',
-        '18',
-        '19',
-        '21',
-        '22',
-        '23',
-        '24',
-        '25',
-        '26',
-        '27',
-        '28',
-        '29',
-      ]
-      const hasInvalidStep =
-        invalidStepIds.includes(firstStep.id) || invalidStepIds.includes(secondStep.id)
-      const allowedHands = hasInvalidStep
-        ? availableHands.filter((h) => !['01', '02'].includes(h.id))
-        : availableHands
-
-      const hands = [randomHand(allowedHands)]
-      if (twoHands) hands.push(randomHand(allowedHands))
-
-      result = { steps: [firstStep, secondStep], hands, comp }
-    }
-
-    setCombo(result)
+    setIsRolling(true)
+    setTimeout(() => {
+      const result = generateCombo(
+        level,
+        availableSteps,
+        availableHands,
+        availableComplications,
+        includeComplication,
+        twoHands
+      )
+      setCombo(result)
+      setIsRolling(false)
+    }, 1200)
   }
+
+  const comboClass =
+    level === 'beginner' || (level === 'advanced' && (includeComplication || twoHands))
+      ? styles.comboTwo
+      : styles.comboThree
 
   return (
     <div className={styles.randomizer}>
@@ -211,8 +61,13 @@ export default function Randomizer() {
         <h2>🎯 Оберіть рівень складності</h2>
 
         <select
+          id="level-select"
+          name="level"
           value={level}
-          onChange={(e) => setLevel(e.target.value as Level)}
+          onChange={(e) => {
+            setLevel(e.target.value as Level)
+            setCombo(null)
+          }}
           className={styles.select}>
           <option value="beginner">Початковий</option>
           <option value="intermediate">Середній</option>
@@ -225,7 +80,10 @@ export default function Randomizer() {
               <input
                 type="checkbox"
                 checked={includeComplication}
-                onChange={(e) => setIncludeComplication(e.target.checked)}
+                onChange={(e) => {
+                  setIncludeComplication(e.target.checked)
+                  setCombo(null)
+                }}
               />
               Включити ускладнення
             </label>
@@ -234,14 +92,17 @@ export default function Randomizer() {
               <input
                 type="checkbox"
                 checked={twoHands}
-                onChange={(e) => setTwoHands(e.target.checked)}
+                onChange={(e) => {
+                  setTwoHands(e.target.checked)
+                  setCombo(null)
+                }}
               />
               Дві комбінації рук
             </label>
           </div>
         )}
 
-        <button onClick={generate} className={styles.button}>
+        <button onClick={handleGenerate} className={styles.button}>
           🎲 Згенерувати комбінацію
         </button>
 
@@ -252,26 +113,23 @@ export default function Randomizer() {
         )}
 
         {combo && !isRolling && (
-          <div className={styles.combo}>
-            {/* 👣 Кроки */}
-            {combo.steps.map((step: any, i: number) => (
-              <div key={`step-${i}`} className={styles.block}>
-                <h3>Крок №{step.id}</h3>
+          <div className={`${styles.combo} ${comboClass}`}>
+            {combo.steps.map((step) => (
+              <div key={step.id} className={styles.block}>
+                <h3>👣 Крок №{step.id}</h3>
                 <p>{step.title}</p>
                 <VideoPlayer url={step.videoUrl} title={step.title} />
               </div>
             ))}
 
-            {/* 🤲 Руки */}
-            {combo.hands.map((hand: any, i: number) => (
-              <div key={`hand-${i}`} className={styles.block}>
-                <h3>Руки №{hand.id}</h3>
+            {combo.hands.map((hand) => (
+              <div key={hand.id} className={styles.block}>
+                <h3>🤲 Руки №{hand.id}</h3>
                 <p>{hand.title}</p>
                 <VideoPlayer url={hand.videoUrl} title={hand.title} />
               </div>
             ))}
 
-            {/* 💥 Ускладнення */}
             {combo.comp && (
               <div className={styles.block}>
                 <h3>🔥 Ускладнення №{combo.comp.id}</h3>

@@ -1,4 +1,6 @@
-const steps = [
+import { Step } from '../types/types'
+
+const steps: Step[] = [
   {
     id: '00',
     title: 'Базовий крок',

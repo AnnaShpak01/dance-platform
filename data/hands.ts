@@ -1,4 +1,6 @@
-const hands = [
+import { Hand } from '../types/types'
+
+const hands: Hand[] = [
   {
     id: '00',
     title: 'Наверх через сторони і за голову вниз',
@@ -61,7 +63,7 @@ const hands = [
   },
   {
     id: '8',
-    title: 'акцент ліктями, по колу, акцент, проворот в іншу сторону, рука по руці по діагоналях',
+    title: 'Акцент ліктями, по колу, акцент, проворот в іншу сторону, рука по руці по діагоналях',
     videoUrl: 'https://youtube.com/shorts/EN1c3DlKqP8',
     lesson: 2,
   },

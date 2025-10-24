@@ -4,27 +4,37 @@
   background: radial-gradient(circle at top, #2e1a47, #0e0b24);
   text-align: center;
   min-height: 100vh;
-  // box-shadow: 0 10px 30px rgba(120, 45, 180, 0.4);
-  // max-width: 1000px;
 }
 
 .select {
   background: #fff;
   color: #4c197e;
   font-weight: 600;
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
   border: none;
   border-radius: 10px;
   font-size: 1.1rem;
-  margin: 1rem 0;
+  margin: 20px auto;
   transition: all 0.3s;
   cursor: pointer;
   display: block;
-  margin: 20px auto;
   width: 345px;
+  position: relative;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%234c197e" d="M2 4l4 4 4-4z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+  outline: none;
 
   &:hover {
     background: #f0e4ff;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%234c197e" d="M2 4l4 4 4-4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px;
   }
 }
 
@@ -106,31 +116,46 @@
 }
 
 .combo {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 20px;
+  padding: 20px;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
 
-.block {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 15px;
-  padding: 1rem;
-  width: 29%;
-  min-width: 300px;
-  color: #fff;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-  max-width: 50%;
+  &.comboTwo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 29%));
+    gap: 20px;
+    justify-content: center;
 
-  h3 {
-    margin-bottom: 0.5rem;
-    color: #ffe9ff;
+    .block:nth-child(5) {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: 100%;
+    }
+  }
+  &.comboThree {
+    grid-template-columns: repeat(3, minmax(0, 29%));
   }
 
-  p {
-    margin-bottom: 1rem;
-    font-weight: 500;
-    height: 56px;
+  .block {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    padding: 1rem;
+    width: 100%;
+    min-width: 300px;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    box-sizing: border-box;
+
+    h3 {
+      margin-bottom: 0.5rem;
+      color: #ffe9ff;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      font-weight: 500;
+      height: 56px;
+    }
   }
 }
