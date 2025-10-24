@@ -33,7 +33,8 @@ export default function Randomizer() {
     }
 
     const randomStep = () => availableSteps[Math.floor(Math.random() * availableSteps.length)]
-    const randomHand = () => availableHands[Math.floor(Math.random() * availableHands.length)]
+    const randomHand = (allowedHands: any[]) =>
+      allowedHands[Math.floor(Math.random() * allowedHands.length)]
     const randomComp = () =>
       availableComplications[Math.floor(Math.random() * availableComplications.length)]
 
@@ -42,7 +43,31 @@ export default function Randomizer() {
 
     // === BEGINNER ===
     if (level === 'beginner') {
-      result = { steps: [randomStep()], hands: [randomHand()] }
+      const step = randomStep()
+
+      // 💡 Проверяем совместимость рук
+      const invalidStepIds = [
+        '02',
+        '16',
+        '17',
+        '18',
+        '19',
+        '21',
+        '22',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+      ]
+      const allowedHands = invalidStepIds.includes(step.id)
+        ? availableHands.filter((h) => !['01', '02'].includes(h.id))
+        : availableHands
+
+      const hand = randomHand(allowedHands)
+      result = { steps: [step], hands: [hand] }
     }
 
     // === INTERMEDIATE ===
@@ -67,7 +92,30 @@ export default function Randomizer() {
         if (!isCounter2) secondStep = validSteps[Math.floor(Math.random() * validSteps.length)]
       }
 
-      result = { steps: [firstStep, secondStep], hands: [randomHand()] }
+      // 💡 Проверяем шаги на несовместимость с руками
+      const invalidStepIds = [
+        '02',
+        '16',
+        '17',
+        '18',
+        '19',
+        '21',
+        '22',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+      ]
+      const hasInvalidStep =
+        invalidStepIds.includes(firstStep.id) || invalidStepIds.includes(secondStep.id)
+      const allowedHands = hasInvalidStep
+        ? availableHands.filter((h) => !['01', '02'].includes(h.id))
+        : availableHands
+
+      result = { steps: [firstStep, secondStep], hands: [randomHand(allowedHands)] }
     }
 
     // === ADVANCED ===
@@ -124,9 +172,31 @@ export default function Randomizer() {
         }
       }
 
-      // === 5. Руки ===
-      const hands = [randomHand()]
-      if (twoHands) hands.push(randomHand())
+      // 💡 5. Проверяем шаги перед выбором рук
+      const invalidStepIds = [
+        '02',
+        '16',
+        '17',
+        '18',
+        '19',
+        '21',
+        '22',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+      ]
+      const hasInvalidStep =
+        invalidStepIds.includes(firstStep.id) || invalidStepIds.includes(secondStep.id)
+      const allowedHands = hasInvalidStep
+        ? availableHands.filter((h) => !['01', '02'].includes(h.id))
+        : availableHands
+
+      const hands = [randomHand(allowedHands)]
+      if (twoHands) hands.push(randomHand(allowedHands))
 
       result = { steps: [firstStep, secondStep], hands, comp }
     }
