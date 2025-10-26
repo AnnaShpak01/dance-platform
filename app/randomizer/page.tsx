@@ -118,7 +118,11 @@ export default function Randomizer() {
               <div key={step.id} className={styles.block}>
                 <h3>👣 Крок №{step.id}</h3>
                 <p>{step.title}</p>
-                <VideoPlayer url={step.videoUrl} title={step.title} />
+                <VideoPlayer
+                  url={step.videoUrl}
+                  title={step.title}
+                  className={styles.videoContainer}
+                />
               </div>
             ))}
 
@@ -126,7 +130,11 @@ export default function Randomizer() {
               <div key={hand.id} className={styles.block}>
                 <h3>🤲 Руки №{hand.id}</h3>
                 <p>{hand.title}</p>
-                <VideoPlayer url={hand.videoUrl} title={hand.title} />
+                <VideoPlayer
+                  url={hand.videoUrl}
+                  title={hand.title}
+                  className={styles.videoContainer}
+                />
               </div>
             ))}
 
@@ -134,7 +142,11 @@ export default function Randomizer() {
               <div className={styles.block}>
                 <h3>🔥 Ускладнення №{combo.comp.id}</h3>
                 <p>{combo.comp.title}</p>
-                <VideoPlayer url={combo.comp.videoUrl} title={combo.comp.title} />
+                <VideoPlayer
+                  url={combo.comp.videoUrl}
+                  title={combo.comp.title}
+                  className={styles.videoContainer}
+                />
               </div>
             )}
           </div>

@@ -146,6 +146,12 @@
     color: #fff;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+
+    .videoContainer {
+      margin: auto auto 0;
+    }
 
     h3 {
       margin-bottom: 0.5rem;
@@ -155,7 +161,7 @@
     p {
       margin-bottom: 1rem;
       font-weight: 500;
-      height: 56px;
+      //height: 56px;
     }
   }
 }

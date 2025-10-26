@@ -13,6 +13,7 @@ export interface Hand {
   title: string
   videoUrl: string
   lesson: number
+  incompatible: string[]
 }
 
 export interface Complication {
