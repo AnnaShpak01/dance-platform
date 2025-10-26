@@ -41,6 +41,7 @@ export default function Header() {
             </Link>
           </div>
           <nav className={styles.nav}>
+            <Link href="/">Головна</Link>
             <Link href="/lessons">Уроки</Link>
             <Link href="/randomizer">Генератор комбінацій</Link>
             <Link href="/choreo">Хореографія</Link>
