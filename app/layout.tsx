@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { Tenor_Sans, Philosopher } from 'next/font/google'
 import NextAuthProvider from './providers/SessionProvider'
 import Header from './components/header/Header'
+import Footer from './components/footer/Footer'
 import './globals.css'
+import ScrollToTop from './components/scrollToTop/ScrollToTop'
 
 const philosopher = Philosopher({
   variable: '--font-philosopher',
@@ -34,6 +36,8 @@ export default function RootLayout({
         <NextAuthProvider>
           <Header />
           <main>{children}</main>
+          <Footer />
+          <ScrollToTop />
         </NextAuthProvider>
       </body>
     </html>

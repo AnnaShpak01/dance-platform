@@ -1,5 +1,7 @@
 .wrapper {
-  background-color: rgb(236, 223, 188);
+  background: #f6d9aa;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   min-height: 100vh;
   padding: 60px 20px;
 }

@@ -243,35 +243,93 @@
   }
 }
 
-.subscribe {
-  padding: 40px;
+.priceCard {
   background-color: #2c165b;
-  color: #fff;
+  padding: 2rem;
+  text-align: center;
+  color: #f9fafb;
+  position: relative;
+  backdrop-filter: blur(12px);
 
-  .wrapper {
-    max-width: 75%;
-    margin: auto;
-    text-align: center;
+  .study_link {
+    display: inline-block;
+    text-decoration: none;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 1.8rem;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin: 25px 0;
 
-    .study_link {
-      display: inline-block;
-      text-decoration: none;
-      background: linear-gradient(135deg, #a855f7, #ec4899);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 0.8rem 1.8rem;
-      font-weight: 600;
-      font-size: 1rem;
-      box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      margin-top: 35px;
-
-      &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(167, 139, 250, 0.6);
-      }
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(167, 139, 250, 0.6);
     }
   }
+
+  p {
+    max-width: 50%;
+    margin: auto;
+  }
+}
+
+.priceTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.priceWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.devide {
+  font-size: 2rem;
+  color: #c4b5fd;
+}
+
+.price {
+  padding: 20px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.oldPrice {
+  color: #c4b5fd;
+  font-size: 1.2rem;
+
+  span {
+    text-decoration: line-through;
+  }
+}
+
+.newPrice {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.discountBadge {
+  display: inline-block;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.6);
 }

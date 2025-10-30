@@ -50,11 +50,14 @@
     font-weight: 500;
     transition: color 0.2s;
 
-    &:hover {
-      color: #e68a1a;
+    &:hover,
+    &.active {
+      color: #edb157;
+      font-weight: 600;
     }
   }
 }
+
 .logo {
   height: 50px;
 }

@@ -217,23 +217,41 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <div className={styles.subscribe}>
+      <div className={styles.priceCard}>
         <div className="container">
-          <div className={styles.wrapper}>
-            <h2>Записуйтесь на навчання</h2>
-            <p>
-              Готові перетворити бачату з рутини на вашу суперсилу? Не відкладайте мрію — місця
-              обмежені, а перша партія уроків стартує вже скоро. Купіть курс зараз і почніть творити
-              свою історію в ритмі бачати. Ваш перший крок до свободи — всього в один клік!
-            </p>
-            <a
-              href="https://t.me/elistana"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.study_link}>
-              Записатись на курс
-            </a>
+          <h2 className={styles.priceTitle}>Вартість курсу</h2>
+          <div>
+            Лише для першого потоку ціну знижено! Придбай курс з {'  '}
+            <div className={styles.discountBadge}>-67%</div>
+            {'  '} знижки
           </div>
+          <div className={styles.priceWrapper}>
+            <div className={styles.price}>
+              <div className={styles.oldPrice}>
+                Замість <span>3 600 ₴</span>
+              </div>
+              <div className={styles.newPrice}>1 200 ₴</div>
+            </div>
+            <div className={styles.devide}>або</div>
+            <div className={styles.price}>
+              <div className={styles.oldPrice}>
+                Замість <span>75 €</span>
+              </div>
+              <div className={styles.newPrice}>25 €</div>
+            </div>
+          </div>
+          <p>
+            Готові перетворити бачату з рутини на вашу суперсилу? Не відкладайте мрію — місця
+            обмежені, а перший потік стартує вже скоро. Купіть курс зараз і почніть творити свою
+            історію в ритмі бачати. Ваш перший крок до свободи — всього в один клік!
+          </p>
+          <a
+            href="https://t.me/elistana"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.study_link}>
+            Записатись на курс
+          </a>
         </div>
       </div>
     </main>

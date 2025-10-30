@@ -3,9 +3,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import styles from './header.module.scss'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const { data: session } = useSession()
+  const pathname = usePathname()
 
   return (
     <header className={styles.header}>
@@ -41,10 +43,18 @@ export default function Header() {
             </Link>
           </div>
           <nav className={styles.nav}>
-            <Link href="/">Головна</Link>
-            <Link href="/lessons">Уроки</Link>
-            <Link href="/randomizer">Генератор комбінацій</Link>
-            <Link href="/choreo">Хореографія</Link>
+            <Link href="/" className={pathname === '/' ? styles.active : ''}>
+              Головна
+            </Link>
+            <Link href="/lessons" className={pathname === '/lessons' ? styles.active : ''}>
+              Уроки
+            </Link>
+            <Link href="/randomizer" className={pathname === '/randomizer' ? styles.active : ''}>
+              Генератор комбінацій
+            </Link>
+            <Link href="/choreo" className={pathname === '/choreo' ? styles.active : ''}>
+              Хореографія
+            </Link>
           </nav>
           <div className={styles.signout}>
             <p>Привіт, {session.user?.name}!</p>
