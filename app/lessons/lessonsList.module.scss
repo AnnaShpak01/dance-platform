@@ -63,15 +63,16 @@
 .imageWrapper {
   position: relative;
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
   overflow: hidden;
 }
 
 .image {
-  width: 100%;
-  height: auto;
   object-fit: cover;
   transition: transform 0.3s ease;
+  width: 100%;
+  height: auto;
 }
 
 .lessonCard:hover .image {

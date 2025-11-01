@@ -45,7 +45,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <div className={styles.wrapper}>
           <h1 className={styles.title}>{lesson.title}</h1>
           <VideoPlayer url={lesson.videoUrl} title={lesson.title} className={styles.video} />
-          <p className={styles.description}>{lesson.description}</p>
+          <p className={styles.description}>
+            <span>Домашнє завдання: </span>
+            {lesson.description}
+          </p>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 .wrapper {
   box-sizing: border-box;
   overflow: hidden;
-  min-height: 98vh;
+  min-height: calc(100vh - 191px);
   margin: auto;
   text-align: center;
   background-color: #f6d9aa;

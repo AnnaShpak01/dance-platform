@@ -13,12 +13,14 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const mobileMenuRef = useRef<HTMLDivElement | null>(null)
 
-  // close mobile menu on route change
+  const shortName = session?.user?.name ? session.user.name.split(' ')[0] : ''
+
+  // закрывать меню при смене маршрута
   useEffect(() => {
     setMobileOpen(false)
   }, [pathname])
 
-  // close if click outside
+  // закрывать меню, если клик вне
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!mobileMenuRef.current) return
@@ -30,12 +32,15 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [mobileOpen])
 
-  const shortName = session?.user?.name ? session.user.name.split(' ')[0] : ''
+  // закрывать меню, если пользователь разлогинился
+  useEffect(() => {
+    if (!session) setMobileOpen(false)
+  }, [session])
 
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        {/* Left: logo */}
+        {/* Логотип (всегда виден) */}
         <div className={styles.left}>
           <Link href="/" className={styles.logoLink}>
             <Image
@@ -48,44 +53,50 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Center navigation (visible on desktop) */}
-        <nav className={styles.nav}>
-          <Link href="/" className={pathname === '/' ? styles.active : ''}>
-            Головна
-          </Link>
-          <Link href="/lessons" className={pathname === '/lessons' ? styles.active : ''}>
-            Уроки
-          </Link>
-          <Link href="/randomizer" className={pathname === '/randomizer' ? styles.active : ''}>
-            Генератор комбінацій
-          </Link>
-          <Link href="/choreo" className={pathname === '/choreo' ? styles.active : ''}>
-            Хореографія
-          </Link>
-        </nav>
+        {/* Навигация (только если пользователь залогинен и не мобильная версия) */}
+        {session && (
+          <nav className={styles.nav}>
+            <Link href="/" className={pathname === '/' ? styles.active : ''}>
+              Головна
+            </Link>
+            <Link href="/lessons" className={pathname === '/lessons' ? styles.active : ''}>
+              Уроки
+            </Link>
+            <Link href="/randomizer" className={pathname === '/randomizer' ? styles.active : ''}>
+              Генератор комбінацій
+            </Link>
+            <Link href="/choreo" className={pathname === '/choreo' ? styles.active : ''}>
+              Хореографія
+            </Link>
+          </nav>
+        )}
 
-        {/* Right area */}
+        {/* Правая часть */}
         <div className={styles.right}>
-          {/* Desktop view: if not session -> show sign-in button; if session -> show greeting + sign out */}
+          {/* Desktop */}
           <div className={styles.desktopOnly}>
             {!session ? (
-              <button className={styles.signInBtn} onClick={() => signIn('google')}>
+              <button
+                className={styles.signInBtn}
+                onClick={() => signIn('google', { callbackUrl: '/' })}>
                 Увійти з Google
               </button>
             ) : (
               <div className={styles.userBlock}>
                 <span className={styles.greeting}>Привіт, {shortName}!</span>
-                <button className={styles.signOutBtn} onClick={() => signOut()}>
+                <button className={styles.signOutBtn} onClick={() => signOut({ callbackUrl: '/' })}>
                   Вийти
                 </button>
               </div>
             )}
           </div>
 
-          {/* Mobile / Tablet: left logo already shown; here on right show either sign-in or greeting + burger */}
+          {/* Mobile */}
           <div className={styles.mobileOnly} ref={mobileMenuRef}>
             {!session ? (
-              <button className={styles.signInBtn} onClick={() => signIn('google')}>
+              <button
+                className={styles.signInBtn}
+                onClick={() => signIn('google', { callbackUrl: '/' })}>
                 Увійти
               </button>
             ) : (
@@ -101,35 +112,45 @@ export default function Header() {
                   <span />
                 </button>
 
-                {/* dropdown (appears under header) */}
-                <div
-                  className={`${styles.mobileDropdown} ${mobileOpen ? styles.show : ''}`}
-                  role="menu">
-                  <Link href="/" role="menuitem" className={pathname === '/' ? styles.active : ''}>
-                    Головна
-                  </Link>
-                  <Link
-                    href="/lessons"
-                    role="menuitem"
-                    className={pathname === '/lessons' ? styles.active : ''}>
-                    Уроки
-                  </Link>
-                  <Link
-                    href="/randomizer"
-                    role="menuitem"
-                    className={pathname === '/randomizer' ? styles.active : ''}>
-                    Генератор комбінацій
-                  </Link>
-                  <Link
-                    href="/choreo"
-                    role="menuitem"
-                    className={pathname === '/choreo' ? styles.active : ''}>
-                    Хореографія
-                  </Link>
-                  <button className={styles.logoutMobile} onClick={() => signOut()}>
-                    Вийти
-                  </button>
-                </div>
+                {/* Dropdown menu (только для залогиненных) */}
+                {session && (
+                  <div
+                    className={`${styles.mobileDropdown} ${mobileOpen ? styles.show : ''}`}
+                    role="menu">
+                    <Link
+                      href="/"
+                      role="menuitem"
+                      className={pathname === '/' ? styles.active : ''}>
+                      Головна
+                    </Link>
+                    <Link
+                      href="/lessons"
+                      role="menuitem"
+                      className={pathname === '/lessons' ? styles.active : ''}>
+                      Уроки
+                    </Link>
+                    <Link
+                      href="/randomizer"
+                      role="menuitem"
+                      className={pathname === '/randomizer' ? styles.active : ''}>
+                      Генератор комбінацій
+                    </Link>
+                    <Link
+                      href="/choreo"
+                      role="menuitem"
+                      className={pathname === '/choreo' ? styles.active : ''}>
+                      Хореографія
+                    </Link>
+                    <button
+                      className={styles.logoutMobile}
+                      onClick={() => {
+                        setMobileOpen(false)
+                        signOut({ callbackUrl: '/' })
+                      }}>
+                      Вийти
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>

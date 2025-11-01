@@ -28,7 +28,9 @@ export default function HomePage() {
                   className={styles.study_link}>
                   Записатись на курс
                 </a>
-                <button onClick={() => signIn('google')} className={styles.study_btn}>
+                <button
+                  onClick={() => signIn('google', { callbackUrl: '/' })}
+                  className={styles.study_btn}>
                   Увійти
                 </button>
               </div>

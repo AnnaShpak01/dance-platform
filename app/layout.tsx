@@ -1,3 +1,5 @@
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route' // путь к твоей конфигурации
 import type { Metadata } from 'next'
 import { Tenor_Sans, Philosopher } from 'next/font/google'
 import NextAuthProvider from './providers/SessionProvider'
@@ -23,17 +25,15 @@ export const metadata: Metadata = {
   description: 'Онлайн-курс бачати у форматі гри 💃',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions)
+
   return (
     <html lang="uk">
       <body
         // className={`${geistSans.variable} ${geistMono.variable}  ${tenorSans.variable} antialiased`}>
         className={`${tenorSans.variable} ${philosopher.variable} antialiased`}>
-        <NextAuthProvider>
+        <NextAuthProvider session={session}>
           <Header />
           <main>{children}</main>
           <Footer />

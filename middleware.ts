@@ -31,6 +31,7 @@ export default withAuth(
 export const config = {
   matcher: [
     '/lessons',
+    '/lessons/:path*',
     '/randomizer',
     '/choreo',
     // Или общий паттерн: '/((?!api|_next/static|_next/image|favicon.ico).*)'
