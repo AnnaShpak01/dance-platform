@@ -116,7 +116,7 @@ export default function Randomizer() {
           <div className={`${styles.combo} ${comboClass}`}>
             {combo.steps.map((step) => (
               <div key={step.id} className={styles.block}>
-                <h3>👣 Крок №{step.id}</h3>
+                <h3>🦶 Крок №{step.id}</h3>
                 <p>{step.title}</p>
                 <VideoPlayer
                   url={step.videoUrl}

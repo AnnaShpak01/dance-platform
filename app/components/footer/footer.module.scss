@@ -1,9 +1,16 @@
 .footer {
   background-color: #180c32;
   color: #fefefe;
-  padding: 2rem 1rem;
+  padding: 32px 16px;
   text-align: center;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 992px) {
+    padding: 20px 0;
+  }
+  @media (max-width: 768px) {
+    padding: 10px 0;
+  }
 
   .wrapper {
     display: flex;
@@ -22,14 +29,29 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
+    @media (max-width: 786px) {
+      img {
+        width: 70px;
+        height: auto;
+      }
+    }
   }
   .rights {
-    font-size: 0.875rem;
+    font-size: 14px;
     opacity: 0.8;
+
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
   }
   .socials {
     display: flex;
-    gap: 1.2rem;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      gap: 10px;
+    }
 
     a {
       color: #c4b5fd;

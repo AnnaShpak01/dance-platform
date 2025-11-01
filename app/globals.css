@@ -23,17 +23,6 @@ h3 {
 }
 
 /* Медиазапросы для разных брейкпоинтов (Bootstrap 5) */
-@media (min-width: 576px) {
-  .container {
-    max-width: 540px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-}
 
 @media (min-width: 992px) {
   .container {
@@ -55,4 +44,36 @@ h3 {
 
 h1 {
   color: #fff;
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+p {
+  font-size: 16px;
+}
+@media (max-width: 1199px) {
+  h2 {
+    font-size: 20px;
+  }
+  p {
+    font-size: 14px;
+  }
+}
+@media (max-width: 992px) {
+  h1 {
+    font-size: 26px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+  h5 {
+    font-size: 16px;
+  }
 }
