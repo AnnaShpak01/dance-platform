@@ -1,33 +1,63 @@
+// randomizer/generateCombo.ts
 import { Step, Hand, Complication, ComboResult, Level } from '@/types/types'
 import { getRandom, getRandomUniqueSteps, filterHandsBySteps } from '@/utils/randomizerUtils'
 
-/**
- * Pick a random step from pool that has id !== excludeId.
- * If pool without exclude is empty, returns undefined.
- */
 const pickDifferentStep = (pool: Step[], excludeId: string): Step | undefined => {
   const filtered = pool.filter((s) => s.id !== excludeId)
   if (!filtered.length) return undefined
   return getRandom(filtered)
 }
 
-/**
- * Ensure first and second are different. If equal, try to replace second with different one.
- * If replacement impossible (pool size 1), keep as is.
- */
 const ensureUniquePair = (first: Step, second: Step, pool: Step[]): [Step, Step] => {
   if (first.id !== second.id) return [first, second]
-
-  // Try to pick a different second
   const alt = pickDifferentStep(pool, first.id)
   if (alt) return [first, alt]
-
-  // As fallback, try picking different first
   const altFirst = pickDifferentStep(pool, second.id)
   if (altFirst) return [altFirst, second]
-
-  // no alternative available (pool size is 1) -> return as is
   return [first, second]
+}
+
+const isCounter = (s: Step | undefined) => !!s && s.category === 'counterpropulsion'
+const isWave = (s: Step | undefined) => !!s && s.category === 'wave'
+
+/**
+ * Enforce compatibility rule:
+ * - if neither is counterpropulsion => keep as is
+ * - if at least one is counterpropulsion => result must be either:
+ *    - two steps from pool of (counterpropulsion | wave) (preferred), OR
+ *    - two steps from pool of non-counterpropulsion (fallback), OR
+ *    - two identical steps from the only available valid group (last resort)
+ */
+const enforceCounterCompatibility = (a: Step, b: Step, pool: Step[]): [Step, Step] => {
+  if (!isCounter(a) && !isCounter(b)) return [a, b]
+
+  const validCounterPool = pool.filter(
+    (s) => s.category === 'counterpropulsion' || s.category === 'wave'
+  )
+  if (validCounterPool.length >= 2) {
+    const [s1, s2] = getRandomUniqueSteps(validCounterPool, 2)
+    return [s1, s2]
+  }
+
+  // if not enough counter/wave, try to use non-counter steps (preferable to mixed pair)
+  const nonCounterPool = pool.filter((s) => s.category !== 'counterpropulsion')
+  if (nonCounterPool.length >= 2) {
+    const [s1, s2] = getRandomUniqueSteps(nonCounterPool, 2)
+    return [s1, s2]
+  }
+
+  // edge cases: if we have exactly 1 validCounter and no other options -> duplicate it
+  if (validCounterPool.length === 1) {
+    return [validCounterPool[0], validCounterPool[0]]
+  }
+
+  // if only one non-counter exists, duplicate it
+  if (nonCounterPool.length === 1) {
+    return [nonCounterPool[0], nonCounterPool[0]]
+  }
+
+  // fallback: return original pair (should be rare)
+  return [a, b]
 }
 
 export const generateCombo = (
@@ -42,42 +72,32 @@ export const generateCombo = (
     throw new Error('No available steps or hands')
   }
 
-  // === BEGINNER ===
+  // --- BEGINNER ---
   if (level === 'beginner') {
     const [step] = getRandomUniqueSteps(availableSteps, 1)
     const allowedHands = filterHandsBySteps([step], availableHands)
     return { steps: [step], hands: [getRandom(allowedHands)] }
   }
 
-  // === INTERMEDIATE ===
+  // --- INTERMEDIATE ---
   if (level === 'intermediate') {
     let [firstStep, secondStep] = getRandomUniqueSteps(availableSteps, 2)
 
-    // if pool gave only one, try to pick different second explicitly
     if (!secondStep) {
       secondStep = pickDifferentStep(availableSteps, firstStep.id) || firstStep
     }
 
-    // Counterpropulsion / Wave logic
-    const isCounter = (s: Step | undefined) => !!s && s.category === 'counterpropulsion'
-    if (isCounter(firstStep) || isCounter(secondStep)) {
-      const valid = availableSteps.filter(
-        (s) => s.category === 'counterpropulsion' || s.category === 'wave'
-      )
-      if (!isCounter(firstStep))
-        firstStep = pickDifferentStep(valid, secondStep.id) || getRandom(valid)
-      if (!isCounter(secondStep))
-        secondStep = pickDifferentStep(valid, firstStep.id) || getRandom(valid)
-    }
+    // apply counter compatibility enforcement (will adjust pair to avoid mixed normal+counter)
+    ;[firstStep, secondStep] = enforceCounterCompatibility(firstStep, secondStep, availableSteps)
 
-    // Ensure uniqueness after all replacements
+    // keep uniqueness where possible
     ;[firstStep, secondStep] = ensureUniquePair(firstStep, secondStep, availableSteps)
 
     const allowedHands = filterHandsBySteps([firstStep, secondStep], availableHands)
     return { steps: [firstStep, secondStep], hands: [getRandom(allowedHands)] }
   }
 
-  // === ADVANCED ===
+  // --- ADVANCED ---
   if (level === 'advanced') {
     let comp: Complication | null = null
     let firstStep: Step
@@ -87,9 +107,9 @@ export const generateCombo = (
       comp = getRandom(availableComplications)
       const compatibleIds = comp.validSteps ?? []
       const compatibleSteps = availableSteps.filter((s) => compatibleIds.includes(s.id))
-
       firstStep = getRandom(compatibleSteps.length ? compatibleSteps : availableSteps)
 
+      // ensure second is not counterpropulsion (as before) but then enforce compatibility again
       const validSecond = availableSteps.filter(
         (s) => s.id !== firstStep.id && s.category !== 'counterpropulsion'
       )
@@ -98,32 +118,59 @@ export const generateCombo = (
       const pair = getRandomUniqueSteps(availableSteps, 2)
       firstStep = pair[0]
       secondStep = pair[1] ?? (pickDifferentStep(availableSteps, firstStep.id) || firstStep)
-
-      const isCounter = (s: Step | undefined) => !!s && s.category === 'counterpropulsion'
-      if (isCounter(firstStep) || isCounter(secondStep)) {
-        const valid = availableSteps.filter(
-          (s) => s.category === 'counterpropulsion' || s.category === 'wave'
-        )
-        if (!isCounter(firstStep))
-          firstStep = pickDifferentStep(valid, secondStep.id) || getRandom(valid)
-        if (!isCounter(secondStep))
-          secondStep = pickDifferentStep(valid, firstStep.id) || getRandom(valid)
-      }
-
-      ;[firstStep, secondStep] = ensureUniquePair(firstStep, secondStep, availableSteps)
     }
 
+    // ALWAYS enforce counter compatibility after selection
+    ;[firstStep, secondStep] = enforceCounterCompatibility(firstStep, secondStep, availableSteps)
+
+    // ensure uniqueness where possible
+    ;[firstStep, secondStep] = ensureUniquePair(firstStep, secondStep, availableSteps)
+
+    // === HANDS selection (existing smart logic) ===
     const allowedHands = filterHandsBySteps([firstStep, secondStep], availableHands)
-    const firstHand = getRandom(allowedHands)
-    const secondHand =
-      twoHands && allowedHands.length > 1
-        ? getRandom(allowedHands.filter((h) => h.id !== firstHand.id))
-        : null
+    const handsForFirst = filterHandsBySteps([firstStep], availableHands)
+    const handsForSecond = filterHandsBySteps([secondStep], availableHands)
 
-    const hands = secondHand ? [firstHand, secondHand] : [firstHand]
+    if (twoHands) {
+      // init with fallbacks (guaranteed availableHands non-empty earlier)
+      const fallback = getRandom(availableHands)
+      let firstHand: Hand = fallback
+      let secondHand: Hand = fallback
 
-    return { steps: [firstStep, secondStep], hands, comp }
+      const hasFirst = handsForFirst.length > 0
+      const hasSecond = handsForSecond.length > 0
+
+      if (hasFirst && hasSecond) {
+        firstHand = getRandom(handsForFirst)
+        const candidate = getRandom(handsForSecond.filter((h) => h.id !== firstHand.id))
+        secondHand = candidate ?? getRandom(handsForSecond)
+      } else if (hasFirst && !hasSecond) {
+        firstHand = getRandom(handsForFirst)
+        const others = availableHands.filter((h) => h.id !== firstHand.id)
+        secondHand = getRandom(others.length ? others : availableHands)
+      } else if (!hasFirst && hasSecond) {
+        secondHand = getRandom(handsForSecond)
+        const others = availableHands.filter((h) => h.id !== secondHand.id)
+        firstHand = getRandom(others.length ? others : availableHands)
+      } else {
+        firstHand = getRandom(availableHands)
+        const others = availableHands.filter((h) => h.id !== firstHand.id)
+        secondHand = getRandom(others.length ? others : availableHands)
+      }
+
+      // final uniqueness fix
+      if (firstHand.id === secondHand.id && availableHands.length > 1) {
+        secondHand = getRandom(availableHands.filter((h) => h.id !== firstHand.id))
+      }
+
+      return { steps: [firstStep, secondStep], hands: [firstHand, secondHand], comp }
+    } else {
+      const allowed = allowedHands.length ? allowedHands : availableHands
+      const firstHand = getRandom(allowed)
+      return { steps: [firstStep, secondStep], hands: [firstHand], comp }
+    }
   }
 
+  // fallback
   return { steps: [], hands: [] }
 }
