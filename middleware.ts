@@ -1,8 +1,9 @@
 import { withAuth } from 'next-auth/middleware'
 import type { NextRequest } from 'next/server'
+import { allowedEmails } from './data/allowedEmail'
 
 // Список разрешённых email (дублируем из вашего роута auth)
-const allowedEmails = ['anna.shpak.fe@gmail.com', 'starlingelistana@gmail.com', 'elistana@i.ua']
+//const allowedEmails = ['anna.shpak.fe@gmail.com', 'starlingelistana@gmail.com', 'elistana@i.ua']
 
 export default withAuth(
   // Middleware функция (здесь можно добавить доп. логику, если нужно)
